@@ -2,16 +2,27 @@
 
 namespace App\Repositories;
 
+use App\Http\Resources\CharacterResource;
+use App\Http\Resources\ComicResource;
 use App\Models\Character;
 use App\Models\Comic;
 use App\Models\Event;
 use App\Models\Serie;
 use App\Models\Story;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class CharacterRepository
 {
-  
+  public function findAll()
+  {
+    $characters = CharacterResource::collection(Character::all());
+
+
+    return $characters;
+  }
+
   public function findById($id)
   {
     $character = Character::find($id);
@@ -20,40 +31,16 @@ class CharacterRepository
       return $character;
     }
 
-    $character = $this->fetchRelations($character);
-
-    return $character;
+    return new CharacterResource($character);
   }
 
-  private function fetchRelations(Model $model)
+  public function getComics($characterId)
   {
-    if (!($model instanceof Character))
-    {
-      $model['characters'] = $model->characters()->paginate(10);
-    }
+    $comics = Comic::join('character_comic', 'comics.id', '=', 'character_comic.comic_id')->where('character_comic.character_id', '=', $characterId)->get();
 
-    if (!($model instanceof Comic))
-    {
-      $model['comics'] = $model->comics()->paginate(10);
-    }
+    
 
-    if (!($model instanceof Event))
-    {
-      $model['events'] = $model->events()->paginate(10);
-    }
-
-    if (!($model instanceof Serie))
-    {
-      $model['series'] = $model->series()->paginate(10);
-    }
-
-    if (!($model instanceof Story))
-    {
-      $model['stories'] = $model->stories()->paginate(10);
-    }
-
-    return $model;
+    return ComicResource::collection( $comics);
   }
-
   
 }
