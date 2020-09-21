@@ -11,6 +11,8 @@ class Character extends Model
 
   const UPDATED_AT = 'modified';
 
+  protected $hidden = ['pivot'];
+
   public function comics()
   {
     return $this->belongsToMany(Comic::class, 'character_comic');

@@ -16,6 +16,7 @@ class CharacterController extends Controller
    * @var CharacterRepository
    */
   protected $characterRepository;
+  protected $result;
   
   /**
    * CharacterController Constructor
@@ -25,6 +26,7 @@ class CharacterController extends Controller
   public function __construct(CharacterRepository $characterRepository)
   {
     $this->characterRepository = $characterRepository;
+    $this->result = ['code' => 200, 'status' => 'success'];
   }  
   
   public function getAll()
@@ -34,20 +36,30 @@ class CharacterController extends Controller
 
   public function getById($id)
   {
-    $result = ['code' => 200, 'status' => 'success'];
 
     try {
-      $result['data'] = $this->characterRepository->findById($id);
+      $this->result['data'] = $this->characterRepository->findById($id);
     } catch (Exception $e) {
-      $result = ['code' => 200, 'status' => 'failed'];
+      $this->result = ['code' => 500, 'status' => 'failed'];
     }
 
-    //check if exists
-    // if ($result['data'] === null) {
-    //   $result = ['code' => 404, 'status' => 'failed', 'message'=> 'Character not found'];
+    // check if exists
+    if ($this->result['data'] === null) {
+      $this->result = ['code' => 404, 'status' => 'failed', 'message'=> 'Character not found'];
+    }
+
+    return response()->json($this->result, $this->result['code']);
+  }
+
+  public function getCharacterComics(int $id)
+  {
+    // try {
+      $this->result['data'] = $this->characterRepository->getComics($id);
+    // } catch (Exception $e) {
+    //   $this->result = ['code' => 500, 'status' => 'failed'];
     // }
 
-    return response()->json($result, $result['code']);
+    return response()->json($this->result, $this->result['code']);
   }
 
 }

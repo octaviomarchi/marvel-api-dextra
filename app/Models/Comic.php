@@ -30,6 +30,6 @@ class Comic extends Model
 
   public function stories()
   {
-    return $this->belongsToMany(Story::class, 'comic_class');
+    return $this->belongsToMany(Story::class, 'comic_story');
   }
 }
