@@ -3,14 +3,30 @@
 namespace App\Http\Controllers\Character;
 
 use App\Http\Controllers\Controller;
+use App\Repositories\CharacterRepository;
+
 use Illuminate\Http\Request;
-
-use App\Models\Character;
-
-use function PHPUnit\Framework\isNull;
+use Exception;
 
 class CharacterController extends Controller
-{
+{  
+  /**
+   * characterService
+   *
+   * @var CharacterRepository
+   */
+  protected $characterRepository;
+  
+  /**
+   * CharacterController Constructor
+   *
+   * @param  CharacterRepository $characterService
+   */
+  public function __construct(CharacterRepository $characterRepository)
+  {
+    $this->characterRepository = $characterRepository;
+  }  
+  
   public function getAll()
   {
 
@@ -18,33 +34,20 @@ class CharacterController extends Controller
 
   public function getById($id)
   {
-    $character = Character::find($id);
-    
-    //check if exists
-    if ($character === null) {
-      return response()->json(['reason' => 'Character not found'], 404);
+    $result = ['code' => 200, 'status' => 'success'];
+
+    try {
+      $result['data'] = $this->characterRepository->findById($id);
+    } catch (Exception $e) {
+      $result = ['code' => 200, 'status' => 'failed'];
     }
 
-    //get the relations
-    // $character = $this->fetchRelations($character);
+    //check if exists
+    // if ($result['data'] === null) {
+    //   $result = ['code' => 404, 'status' => 'failed', 'message'=> 'Character not found'];
+    // }
 
-
-    return response()->json($character, 200);
+    return response()->json($result, $result['code']);
   }
 
-  private function fetchRelations(Character $characterObj)
-  {
-
-    $characterObj = $this->getComics($characterObj);
-
-    return $characterObj;
-  }
-
-  private function getComics(Character $characterObj)
-  {
-    $comics = 
-    $characterObj['comics'] = $characterObj->comics()->get();
-
-    return $characterObj;
-  }
 }

@@ -13,6 +13,8 @@ class Story extends Model
 
   const UPDATED_AT = 'modified';
 
+  protected $hidden = ['pivot'];
+
   public function characters()
   {
     return $this->belongsToMany(Character::class, 'character_story');

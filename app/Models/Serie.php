@@ -11,6 +11,8 @@ class Serie extends Model
 
   const UPDATED_AT = 'modified';
 
+  protected $hidden = ['pivot'];
+
   public function characters()
   {
     return $this->belongsToMany('App\Models\Character', 'character_serie');
