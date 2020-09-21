@@ -53,11 +53,22 @@ class CharacterController extends Controller
 
   public function getCharacterComics(int $id)
   {
-    // try {
+    try {
       $this->result['data'] = $this->characterRepository->getComics($id);
-    // } catch (Exception $e) {
-    //   $this->result = ['code' => 500, 'status' => 'failed'];
-    // }
+    } catch (Exception $e) {
+      $this->result = ['code' => 500, 'status' => 'failed'];
+    }
+
+    return response()->json($this->result, $this->result['code']);
+  }
+
+  public function getCharacterEvents(int $id)
+  {
+    try {
+      $this->result['data'] = $this->characterRepository->getEvents($id);
+    } catch (Exception $e) {
+      $this->result = ['code' => 500, 'status' => 'failed'];
+    }
 
     return response()->json($this->result, $this->result['code']);
   }
