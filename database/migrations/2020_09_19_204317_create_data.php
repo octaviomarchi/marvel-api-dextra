@@ -76,24 +76,24 @@ class CreateData extends Migration
                 'id'=> 1,
                 'title'=> 'Comic Con San Diego 2018',
                 'description'=> 'The biggest nerd event of 2018',
-                'start' => '2018-08-01 00:00:00',
-                'end'=> '2018-08-05 00:00:00',
+                'start_date' => '2018-08-01 00:00:00',
+                'end_date'=> '2018-08-05 00:00:00',
                 'thumbnail'=> 'comic-con-2018.png'
             ],
             [
                 'id'=> 2,
                 'title'=> 'Comic Con San Diego 2019',
                 'description'=> 'The biggest nerd event of 2019',
-                'start' => '2019-08-01 00:00:00',
-                'end'=> '2019-08-05 00:00:00',
+                'start_date' => '2019-08-01 00:00:00',
+                'end_date'=> '2019-08-05 00:00:00',
                 'thumbnail'=> 'comic-con-2018.png'
             ],
             [
                 'id'=> 3,
                 'title'=> 'Comic Con San Diego 2020',
                 'description'=> 'The biggest nerd event of 2020',
-                'start' => '2020-08-01 00:00:00',
-                'end'=> '2019-08-05 00:00:00',
+                'start_date' => '2020-08-01 00:00:00',
+                'end_date'=> '2019-08-05 00:00:00',
                 'thumbnail'=> 'comic-con-2018.png'
             ],
         ]);
