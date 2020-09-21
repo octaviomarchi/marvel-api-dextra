@@ -25,7 +25,7 @@ class Serie extends Model
 
   public function events()
   {
-    return $this->belongsToMany(Events::class, 'event_serie');
+    return $this->belongsToMany(Event::class, 'event_serie');
   }
 
   public function stories()

@@ -5,14 +5,12 @@ namespace App\Repositories;
 use App\Http\Resources\CharacterResource;
 use App\Http\Resources\ComicResource;
 use App\Http\Resources\EventResource;
+use App\Http\Resources\SerieResource;
 use App\Models\Character;
 use App\Models\Comic;
 use App\Models\Event;
 use App\Models\Serie;
 use App\Models\Story;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 
 class CharacterRepository
 {
@@ -47,5 +45,12 @@ class CharacterRepository
     $events = Event::join('character_event', 'events.id', '=', 'character_event.event_id')->where('character_event.character_id', '=', $characterId)->get();
 
     return EventResource::collection($events);
+  }
+  
+  public function getSeries($characterId)
+  {
+    $series = Serie::join('character_serie', 'series.id', '=', 'character_serie.serie_id')->where('character_serie.character_id', '=', $characterId)->get();
+
+    return SerieResource::collection($series);
   }
 }

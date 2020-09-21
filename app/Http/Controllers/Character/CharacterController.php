@@ -73,4 +73,15 @@ class CharacterController extends Controller
     return response()->json($this->result, $this->result['code']);
   }
 
+  public function getCharacterSeries(int $id)
+  {
+    try {
+      $this->result['data'] = $this->characterRepository->getSeries($id);
+    } catch (Exception $e) {
+      $this->result = ['code' => 500, 'status' => 'failed'];
+    }
+
+    return response()->json($this->result, $this->result['code']);
+  }
+
 }
