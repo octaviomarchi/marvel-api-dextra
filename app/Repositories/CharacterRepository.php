@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Http\Resources\CharacterResource;
 use App\Http\Resources\ComicResource;
+use App\Http\Resources\EventResource;
 use App\Models\Character;
 use App\Models\Comic;
 use App\Models\Event;
@@ -38,9 +39,13 @@ class CharacterRepository
   {
     $comics = Comic::join('character_comic', 'comics.id', '=', 'character_comic.comic_id')->where('character_comic.character_id', '=', $characterId)->get();
 
-    
-
-    return ComicResource::collection( $comics);
+    return ComicResource::collection($comics);
   }
-  
+
+  public function getEvents($characterId)
+  {
+    $events = Event::join('character_event', 'events.id', '=', 'character_event.event_id')->where('character_event.character_id', '=', $characterId)->get();
+
+    return EventResource::collection($events);
+  }
 }
