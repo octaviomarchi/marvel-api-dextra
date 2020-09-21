@@ -17,8 +17,8 @@ class CreateEventsTable extends Migration
       $table->id()->autoIncrement();
       $table->string('title', 45);
       $table->text('description');
-      $table->timestamp('start', 0);
-      $table->timestamp('end', 0);
+      $table->timestamp('start_date')->nullable();
+      $table->timestamp('end_date')->nullable();
       $table->string('thumbnail');
       $table->timestamp('created_at', 0)->nullable(false)->useCurrent();
       $table->timestamp('modified', 0)->nullable(false)->useCurrent();
