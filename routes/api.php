@@ -21,6 +21,7 @@ Route::group(['prefix' => 'characters'], function () {
       Route::get('/', [CharacterController::class, 'getById']);
       Route::get('/comics', [CharacterController::class, 'getCharacterComics']);
       Route::get('/events', [CharacterController::class, 'getCharacterEvents']);
+      Route::get('/series', [CharacterController::class, 'getCharacterSeries']);
     });
 });
 

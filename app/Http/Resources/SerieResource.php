@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class EventResource extends JsonResource
+class SerieResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,22 +18,22 @@ class EventResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'description' => $this->description,
-            'resourceURI' => 'v1/public/events/' . $this->id,
+            'resourceURI' => 'v1/public/series/' . $this->id,
+            'startYear'=> $this->start_year,
+            'endYear'=> $this->end_year,
+            'rating'=> $this->rating,
             'modified' => $this->modified,
-            'start' => $this->start_date,
-            'end' => $this->end_date,
             'thumbnail' => $this->thumbnail,
             'comics' => $this->comics,
             'stories' => $this->stories,
-            'series' => $this->series,
+            'events' => $this->events,
             'characters' => $this->characters
         ];
 
         $array['comics'] = ResourceUtils::filterComics($array['comics']);
         $array['characters'] = ResourceUtils::filterCharacters($array['characters']);
-        $array['series'] = ResourceUtils::filterSeries($array['series']);
+        $array['events'] = ResourceUtils::filterEvents($array['events']);
         $array['stories'] = ResourceUtils::filterStories($array['stories']);
-
 
         return $array;
     }
