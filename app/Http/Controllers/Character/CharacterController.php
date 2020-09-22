@@ -34,7 +34,7 @@ class CharacterController extends Controller
   /**
    * Get all Characters
    *
-   * @return ApiResponse
+   * @return JSON
    */
   public function getAll(Request $request)
   {
@@ -62,8 +62,10 @@ class CharacterController extends Controller
       return $this->sendResponse($this->result);
     }
 
+    $validatedData = $validator->validated();
+
     try {
-      $this->result['data'] = $this->characterRepository->findAll();
+      $this->result['data'] = $this->characterRepository->findAll($validatedData);
     } catch (Exception $e) {
       $this->result = ['code' => 500, 'status' => 'failed'];
     }
