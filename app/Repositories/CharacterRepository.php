@@ -6,6 +6,7 @@ use App\Http\Resources\CharacterResource;
 use App\Http\Resources\ComicResource;
 use App\Http\Resources\EventResource;
 use App\Http\Resources\SerieResource;
+use App\Http\Resources\StoryResource;
 use App\Models\Character;
 use App\Models\Comic;
 use App\Models\Event;
@@ -52,5 +53,12 @@ class CharacterRepository
     $series = Serie::join('character_serie', 'series.id', '=', 'character_serie.serie_id')->where('character_serie.character_id', '=', $characterId)->get();
 
     return SerieResource::collection($series);
+  }
+
+  public function getStories($characterId)
+  {
+    $stories = Story::join('character_story', 'stories.id', '=', 'character_story.story_id')->where('character_story.character_id', '=', $characterId)->get();
+
+    return StoryResource::collection($stories);
   }
 }
