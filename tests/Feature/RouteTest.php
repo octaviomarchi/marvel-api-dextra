@@ -32,7 +32,8 @@ class RouteTest extends TestCase
         $characterId = 0;
         $response = $this->get('/v1/public/characters/'. $characterId);
 
-        $response->assertStatus(404);
-        $response->assertJson(['reason' => 'Character not found']);
+        $response
+            ->assertStatus(404)
+            ->assertJsonFragment(['message' => 'Character not found']);
     }
 }

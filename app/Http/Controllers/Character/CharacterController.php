@@ -6,10 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Repositories\CharacterRepository;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Exception;
+use Illuminate\Validation\Rule;
 
 class CharacterController extends Controller
-{  
+{
   /**
    * characterService
    *
@@ -17,7 +19,7 @@ class CharacterController extends Controller
    */
   protected $characterRepository;
   protected $result;
-  
+
   /**
    * CharacterController Constructor
    *
@@ -27,15 +29,39 @@ class CharacterController extends Controller
   {
     $this->characterRepository = $characterRepository;
     $this->result = ['code' => 200, 'status' => 'success'];
-  }  
-    
+  }
+
   /**
    * Get all Characters
    *
    * @return ApiResponse
    */
-  public function getAll()
+  public function getAll(Request $request)
   {
+
+    $rules = [
+      'name' => ['sometimes', 'string'],
+      'nameStartsWith' => ['sometimes', 'string'],
+      'modifiedSince' => ['sometimes', 'date'],
+      'comics' => ['sometimes', 'regex:/^(\d+(,\d+)*)?$/u'],
+      'series' => ['sometimes', 'regex:/^(\d+(,\d+)*)?$/u'],
+      'events' => ['sometimes', 'regex:/^(\d+(,\d+)*)?$/u'],
+      'stories' => ['sometimes', 'regex:/^(\d+(,\d+)*)?$/u'],
+      'orderBy' => ['sometimes', 'string', Rule::in(['name', 'modified', '-name', '-modified'])],
+      'limit' => ['sometimes', 'integer', 'min:1', 'max:100'],
+      'offset' => ['sometimes', 'integer'],
+    ];
+
+    $validator = Validator::make($request->all(), $rules);
+
+    if ($validator->fails()) {
+      $this->result['code'] = 409;
+      $this->result['status'] = 'failed';
+      $this->result['message'] = $validator->errors();
+
+      return $this->sendResponse($this->result);
+    }
+
     try {
       $this->result['data'] = $this->characterRepository->findAll();
     } catch (Exception $e) {
@@ -56,7 +82,7 @@ class CharacterController extends Controller
 
     // check if exists
     if ($this->result['data'] === null) {
-      $this->result = ['code' => 404, 'status' => 'failed', 'message'=> 'Character not found'];
+      $this->result = ['code' => 404, 'status' => 'failed', 'message' => 'Character not found'];
     }
 
     return $this->sendResponse($this->result);
@@ -94,20 +120,20 @@ class CharacterController extends Controller
 
     return $this->sendResponse($this->result);
   }
-  
+
   public function getCharacterStories(int $id)
   {
     // try {
-      $this->result['data'] = $this->characterRepository->getStories($id);
+    $this->result['data'] = $this->characterRepository->getStories($id);
     // } catch (Exception $e) {
-      // $this->result = ['code' => 500, 'status' => 'failed'];
+    // $this->result = ['code' => 500, 'status' => 'failed'];
     // }
 
     return $this->sendResponse($this->result);
   }
 
-  private function sendResponse($response){
+  private function sendResponse($response)
+  {
     return response()->json($response, $response['code']);
   }
-
 }
