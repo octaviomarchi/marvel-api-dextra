@@ -64,11 +64,13 @@ class CharacterController extends Controller
 
     $validatedData = $validator->validated();
 
-    try {
+    $validatedData = $this->convertStringsToArrayFromArrayKeys($validatedData, ['comics', 'series', 'events', 'stories']);
+
+    // try {
       $this->result['data'] = $this->characterRepository->findAll($validatedData);
-    } catch (Exception $e) {
-      $this->result = ['code' => 500, 'status' => 'failed'];
-    }
+    // } catch (Exception $e) {
+      // $this->result = ['code' => 500, 'status' => 'failed'];
+    // }
 
     return $this->sendResponse($this->result);
   }
@@ -125,11 +127,11 @@ class CharacterController extends Controller
 
   public function getCharacterStories(int $id)
   {
-    // try {
-    $this->result['data'] = $this->characterRepository->getStories($id);
-    // } catch (Exception $e) {
-    // $this->result = ['code' => 500, 'status' => 'failed'];
-    // }
+    try {
+      $this->result['data'] = $this->characterRepository->getStories($id);
+    } catch (Exception $e) {
+      $this->result = ['code' => 500, 'status' => 'failed'];
+    }
 
     return $this->sendResponse($this->result);
   }
@@ -137,5 +139,22 @@ class CharacterController extends Controller
   private function sendResponse($response)
   {
     return response()->json($response, $response['code']);
+  }
+
+  /**
+   * convertStringsToArray
+   *
+   * @param  Array $variable
+   * @param  Array<String> $keysToBeConverted
+   * @return Array
+   */
+  private function convertStringsToArrayFromArrayKeys($variable, $keysToBeConverted)
+  {
+    foreach ($keysToBeConverted as $key) {
+      if (!empty($variable[$key])) {
+        $variable[$key] = explode(',', $variable[$key]);
+      }
+    }
+    return $variable;
   }
 }

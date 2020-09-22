@@ -16,7 +16,7 @@ use App\Models\Story;
 
 class CharacterRepository
 {
-    
+
   /**
    * Finds all the character based on the filsters
    *
@@ -27,8 +27,8 @@ class CharacterRepository
   public function findAll($queryParameters)
   {
     $characters = $this->setCharacterFilters(new Character, $queryParameters);
-    
-    $result = CharacterResource::collection($characters->get());
+
+    $result = CharacterResource::collection($characters->distinct()->get('characters.*'));
 
     return $result;
   }
@@ -71,7 +71,7 @@ class CharacterRepository
 
     return StoryResource::collection($stories);
   }
-  
+
   /**
    * Set the $filters into the $model and returns it
    *
@@ -82,6 +82,7 @@ class CharacterRepository
    */
   private function setCharacterFilters($model, $filters)
   {
+
     if (!empty($filters['name'])) {
       $model = $model->where('name', '=', $filters['name']);
     }
@@ -89,6 +90,31 @@ class CharacterRepository
     if (!empty($filters['nameStartsWith'])) {
       $model = $model->where('name', 'like', $filters['nameStartsWith'] . '%');
     }
+
+    if (!empty($filters['comics'])) {
+      $model = $model
+        ->join('character_comic', 'character_comic.character_id', '=', 'characters.id')
+        ->whereIn('character_comic.comic_id', $filters['comics']);
+    }
+
+    if (!empty($filters['events'])) {
+      $model = $model
+        ->join('character_event', 'character_event.character_id', '=', 'characters.id')
+        ->whereIn('character_event.event_id', $filters['events']);
+    }
+
+    if (!empty($filters['series'])) {
+      $model = $model
+        ->join('character_serie', 'character_serie.character_id', '=', 'characters.id')
+        ->whereIn('character_serie.serie_id', $filters['series']);
+    }
+
+    if (!empty($filters['stories'])) {
+      $model = $model
+        ->join('character_story', 'character_story.character_id', '=', 'characters.id')
+        ->whereIn('character_story.story_id', $filters['stories']);
+    }
+
 
     return $model;
   }
