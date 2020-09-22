@@ -19,7 +19,6 @@ class CharacterRepository
   {
     $characters = CharacterResource::collection(Character::all());
 
-
     return $characters;
   }
 

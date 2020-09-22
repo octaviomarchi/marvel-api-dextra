@@ -28,10 +28,21 @@ class CharacterController extends Controller
     $this->characterRepository = $characterRepository;
     $this->result = ['code' => 200, 'status' => 'success'];
   }  
-  
+    
+  /**
+   * Get all Characters
+   *
+   * @return ApiResponse
+   */
   public function getAll()
   {
+    try {
+      $this->result['data'] = $this->characterRepository->findAll();
+    } catch (Exception $e) {
+      $this->result = ['code' => 500, 'status' => 'failed'];
+    }
 
+    return $this->sendResponse($this->result);
   }
 
   public function getById($id)
@@ -48,7 +59,7 @@ class CharacterController extends Controller
       $this->result = ['code' => 404, 'status' => 'failed', 'message'=> 'Character not found'];
     }
 
-    return response()->json($this->result, $this->result['code']);
+    return $this->sendResponse($this->result);
   }
 
   public function getCharacterComics(int $id)
@@ -59,7 +70,7 @@ class CharacterController extends Controller
       $this->result = ['code' => 500, 'status' => 'failed'];
     }
 
-    return response()->json($this->result, $this->result['code']);
+    return $this->sendResponse($this->result);
   }
 
   public function getCharacterEvents(int $id)
@@ -70,7 +81,7 @@ class CharacterController extends Controller
       $this->result = ['code' => 500, 'status' => 'failed'];
     }
 
-    return response()->json($this->result, $this->result['code']);
+    return $this->sendResponse($this->result);
   }
 
   public function getCharacterSeries(int $id)
@@ -81,7 +92,7 @@ class CharacterController extends Controller
       $this->result = ['code' => 500, 'status' => 'failed'];
     }
 
-    return response()->json($this->result, $this->result['code']);
+    return $this->sendResponse($this->result);
   }
   
   public function getCharacterStories(int $id)
@@ -92,7 +103,11 @@ class CharacterController extends Controller
       // $this->result = ['code' => 500, 'status' => 'failed'];
     // }
 
-    return response()->json($this->result, $this->result['code']);
+    return $this->sendResponse($this->result);
+  }
+
+  private function sendResponse($response){
+    return response()->json($response, $response['code']);
   }
 
 }
