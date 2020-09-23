@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 use App\Http\Resources\CharacterResource;
 use App\Http\Resources\ComicResource;
 use App\Http\Resources\EventResource;
@@ -115,6 +116,16 @@ class CharacterRepository
         ->whereIn('character_story.story_id', $filters['stories']);
     }
 
+    if (!empty($filters['orderBy'])) {
+
+      $order = 'asc';
+      if (Str::startsWith($filters['orderBy'], '-')) {
+        $order = 'desc';
+        $filters['orderBy'] = Str::substr($filters['orderBy'], 1);
+      }
+
+      $model = $model->orderBy('characters.' . $filters['orderBy'], $order);
+    }
 
     return $model;
   }

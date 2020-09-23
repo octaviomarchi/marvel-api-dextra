@@ -66,12 +66,12 @@ class CharacterController extends Controller
 
     $validatedData = $this->convertStringsToArrayFromArrayKeys($validatedData, ['comics', 'series', 'events', 'stories']);
 
-    // try {
+    try {
       $this->result['data'] = $this->characterRepository->findAll($validatedData);
-    // } catch (Exception $e) {
-      // $this->result = ['code' => 500, 'status' => 'failed'];
-    // }
-
+    } catch (Exception $e) {
+      $this->result = ['code' => 500, 'status' => 'failed'];
+    }
+    
     return $this->sendResponse($this->result);
   }
 
